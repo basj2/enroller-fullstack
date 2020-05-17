@@ -1,52 +1,84 @@
 <template>
   <div id="app">
     <h1>
-      <img src="./assets/logo.svg" alt="Enroller" class="logo">
+      <img src="./assets/logo.svg" alt="Enroller" class="logo" />
       System do zapisów na zajęcia
     </h1>
     <div v-if="authenticatedUsername">
-      <h2>Witaj {{ authenticatedUsername }}!
-        <a @click="logout()" class="float-right  button-outline button">Wyloguj</a>
+      <h2>
+        Witaj {{ authenticatedUsername }}!
+        <a
+          @click="logout()"
+          class="float-right button-outline button"
+        >Wyloguj</a>
       </h2>
       <meetings-page :username="authenticatedUsername"></meetings-page>
     </div>
     <div v-else>
-      <login-form @login="login($event)"></login-form>
+      <button @click="registering = false" :class="registering ? 'button-outline' : ''">Loguję się</button>
+      <button
+        @click="registering = true"
+        :class="!registering ? 'button-outline' : ''"
+      >Rejestruję się</button>
+      <div v-if ="error" class="error-alert">{{error}}</div>
+      <div v-if="registering==false">
+        <login-form @login="login($event)"></login-form>
+      </div>
+      <div v-else>
+        <login-form button-label="Zarejestruj się" @login="register($event)"></login-form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-    import "milligram";
-    import LoginForm from "./LoginForm";
-    import MeetingsPage from "./meetings/MeetingsPage";
+import "milligram";
+import LoginForm from "./LoginForm";
+import MeetingsPage from "./meetings/MeetingsPage";
 
-    export default {
-        components: {LoginForm, MeetingsPage},
-        data() {
-            return {
-                authenticatedUsername: ""
-            };
-        },
-        methods: {
-            login(user) {
-                this.authenticatedUsername = user.login;
-            },
-            logout() {
-                this.authenticatedUsername = '';
-            }
-        }
+export default {
+  components: { LoginForm, MeetingsPage },
+  data() {
+    return {
+      authenticatedUsername: "",
+      registering: false,
+      error: ""
     };
+  },
+  methods: {
+    login(user) {
+      this.authenticatedUsername = user.login;
+    },
+    register(user) {
+      this.error = ""
+      this.$http
+        .post("participants", user)
+        .then(response => {
+          // udało się
+        })
+        .catch(response => {
+          // nie udało sie
+          this.error = 'Taki użytkownik już istnieje.'        });
+    },
+    logout() {
+      this.authenticatedUsername = "";
+    }
+  }
+};
 </script>
 
 <style>
-  #app {
-    max-width: 1000px;
-    margin: 0 auto;
-  }
+#app {
+  max-width: 1000px;
+  margin: 0 auto;
+}
 
-  .logo {
-    vertical-align: middle;
-  }
+.logo {
+  vertical-align: middle;
+}
+
+.error-alert {
+  color: red
+}
 </style>
 
