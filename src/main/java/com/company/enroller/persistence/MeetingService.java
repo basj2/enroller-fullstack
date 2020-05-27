@@ -33,6 +33,12 @@ public class MeetingService {
     public Meeting findById(long id) {
         return (Meeting) session.get(Meeting.class, id);
     }
+    
+    public void delete(Meeting meeting) {
+        Transaction transaction = this.session.beginTransaction();
+        session.delete(meeting);
+        transaction.commit();
+    }
 
 
 }

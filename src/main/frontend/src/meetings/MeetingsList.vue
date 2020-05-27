@@ -12,8 +12,8 @@
     <tr v-for="meeting in meetings" :key="meeting.title">
       <td>{{ meeting.title }}</td>
       <td>{{ meeting.description }}</td>
-      <!--td>
-        <ul v-if="meeting.participants">
+      <td>
+        <!--ul v-if="meeting.participants">
           <li v-for="participant in meeting.participants" :key="participant">
             {{ participant }}
           </li>
@@ -24,11 +24,11 @@
                 @click="$emit('attend', meeting)">
           Zapisz się
         </button>
-        <button v-else class="button-outline" @click="$emit('unattend', meeting)">Wypisz się</button>
-        <button v-if="meeting.participants.length === 0" class="button" @click="$emit('delete', meeting)">
+        <button v-else class="button-outline" @click="$emit('unattend', meeting)">Wypisz się</button-->
+        <button class="button" @click="$emit('delete', meeting)">
           Usuń puste spotkanie
         </button>
-      </td-->
+      </td>
     </tr>
     </tbody>
   </table>
