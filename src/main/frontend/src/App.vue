@@ -4,13 +4,13 @@
       <img src="./assets/logo.svg" alt="Enroller" class="logo">
       System do zapisów na zajęcia
     </h1>
-    <div v-if="authenticatedUsername">
+    <div v-show="authenticatedUsername">
       <h2>Witaj {{ authenticatedUsername }}!
         <a @click="logout()" class="float-right  button-outline button">Wyloguj</a>
       </h2>
-      <meetings-page :username="authenticatedUsername"></meetings-page>
+      <meetings-page :username="authenticatedUsername" ></meetings-page>
     </div>
-    <div v-else>
+    <div v-if="!authenticatedUsername">
       <button @click="registering = false" :class="registering ? 'button-outline' : ''">Loguję się</button>
       <button @click="registering = true" :class="!registering ? 'button-outline' : ''">Rejestruję się</button>
       <div :class="'alert alert-' + (this.isError ? 'error' : 'success')" v-if="message">{{ message }}</div>
@@ -32,7 +32,7 @@
                 authenticatedUsername: "",
                 registering: false,
                 message: '',
-                isError: false
+                isError: false				
             };
         },
         methods: {
