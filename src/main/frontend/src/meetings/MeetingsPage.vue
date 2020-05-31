@@ -16,7 +16,6 @@
 <script>
 import NewMeetingForm from "./NewMeetingForm";
 import MeetingsList from "./MeetingsList";
-
 export default {
   components: { NewMeetingForm, MeetingsList },
   props: ["username"],
@@ -54,6 +53,21 @@ export default {
         this.meetings.splice(this.meetings.indexOf(meeting), 1);
       });
     }
+  },
+  mounted() {
+    this.$http.get("meetings").then(response => {
+      response.data.forEach(meeting => {
+        meeting.participants = [];
+        this.meetings.push(meeting);
+        this.$http
+          .get("meetings/" + meeting.id + "/participants")
+          .then(response => {
+            for (var p of response.data) {
+              meeting.participants.push(p.login);
+            }
+          });
+      });
+    });
   }
 };
 </script>
